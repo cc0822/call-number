@@ -5,12 +5,12 @@
  * Time: 下午5:48
  * Desc: 路由跳转工具类
  */
-import store from "../redux/store";
+// import store from "../redux/store";
 import {NavigationActions} from "react-navigation";
 
 //路由跳转
 function navTo(routeName, params) {
-  store.dispatch(NavigationActions.navigate({routeName, params}));
+  // store.dispatch(NavigationActions.navigate({routeName, params}));
 }
 /**
  * 返回
@@ -22,29 +22,29 @@ function navTo(routeName, params) {
  * ] 要返回Login时 key = 'id-1522829051196-3'
  */
 function navBack(key) {
-  store.dispatch(NavigationActions.back({key}));
+  // store.dispatch(NavigationActions.back({key}));
 }
 //重定向至
 function navResetTo(routeName, params) {
-  store.dispatch(NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({routeName, params})
-      ]
-    }
-  ));
+  // store.dispatch(NavigationActions.reset({
+  //     index: 0,
+  //     actions: [
+  //       NavigationActions.navigate({routeName, params})
+  //     ]
+  //   }
+  // ));
 }
 
 /**
  * 当前路由名
  */
 function currentRouteName() {
-  try {
-    const {nav: {routes}} = store.getState();
-    return routes.slice(-1)[0].routeName
-  } catch (e) {
-    return '';
-  }
+  // try {
+  //   const {nav: {routes}} = store.getState();
+  //   return routes.slice(-1)[0].routeName
+  // } catch (e) {
+  //   return '';
+  // }
 }
 
 

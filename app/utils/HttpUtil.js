@@ -1,10 +1,28 @@
 import React from 'react';
 import {NetInfo} from "react-native"
+import cfg from '../config/index';
 
-async function request(method, url, params = {}, headers = {}) {
-    const isConnected = await NetInfo.isConnected.fetch()
+function beforeRequest(method, params, headers) {
+    if (method === 'POST' || method === 'PUT') {
+        let body = JSON.stringify(params);
+        if(headers['Content-Type'] === 'multipart/form-data') {
+            body = params;
+        }
+        params = {body: body};
+    }
+    //认证header添加
+    const user = storage.cache.user ? storage.cache.user.rawData : {};
+    let authHeaders = user ? {
+        "X-Auth-Token": user['userToken'],
+        "X-User-Id": user['userId']
+    } : {};
+    return {params, authHeaders};
+}
 
+async function request(method, url, oldParams = {}, headers = {}) {
+    const isConnected = await NetInfo.isConnected.fetch();
     let allowLoading = true;
+    const server = cfg.server;
     if (typeof(url) === 'object') {
         if(url['hideLoading']) {
             allowLoading = false;
@@ -20,7 +38,18 @@ async function request(method, url, params = {}, headers = {}) {
 
     return new Promise((resolve, reject) => {
         // allowLoading &&
-        fetch(url, {method, headers, params}).then((response) => {
+        let {params, authHeaders} = beforeRequest(method, oldParams, headers);
+
+        log('请求参数:', method, url, params, authHeaders);
+
+        fetch(url, {
+            method: method,
+            headers: {
+                ...authHeaders,
+                ...headers
+            },
+            ...params
+        }).then((response) => {
             log('请求成功结果转换前', response);
             if(response.ok) {
                 return response.json();
@@ -29,6 +58,10 @@ async function request(method, url, params = {}, headers = {}) {
             }
         }).then((response) => {
             log('请求成功结果', response);
+            if (!response.success && response.message === '用户未登录') {
+                toast('登录已过期,请重新登录', 'danger');
+                return;
+            }
             resolve(response);
         }).catch((err) => {
             let tipText = '请求异常:';
@@ -62,11 +95,11 @@ const http = {
                 }
             }
         }
-        return request('GET', url);
+        return request('GET', url, {
+            "Content-Type": "application/json;charset=UTF-8",
+        });
     },
     postJson(url, params, headers) {
-        let body = JSON.stringify(params);
-        params = {body: body};
         return request('POST', url, params, {
             ...headers,
             'Accept': 'application/json',
@@ -74,9 +107,7 @@ const http = {
         });
     },
     putJson(url, params, headers) {
-        let body = JSON.stringify(params);
-        params = {body: body};
-        return request('PUT', url, params, {
+        return request('PUT', url, params,{
             ...headers,
             'Accept': 'application/json',
             'Content-Type': 'application/json'

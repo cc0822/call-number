@@ -1,36 +1,35 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import './app/utils/Globar';
-
 import React, {Component} from 'react';
-import {StyleSheet, Button} from 'react-native';
-import {Provider} from "react-redux";
-import store from "./app/redux/store";
-import AppWithNavigationState from "./app/routes/AppWithNavigationState";
-import "./app/service";
+import {
+    Platform,
+    StyleSheet,
+    Text,
+    View
+} from 'react-native';
+import {Login} from './app/views/Login';
+
+import Orientation from 'react-native-orientation';
 import AppRouter from "./app/routes/routes";
 
 
-export default class App extends Component<{}, {}> {
-  constructor() {
-    super();
-  }
+// const instructions = Platform.select({
+//     ios: 'Press Cmd+R to reload,\n' +
+//     'Cmd+D or shake for dev menu',
+//     android: 'Double tap R on your keyboard to reload,\n' +
+//     'Shake or press menu button for dev menu',
+// });
 
-  render() {
-    return (
-      <Provider store={store}>
-        <AppWithNavigationState/>
-      </Provider>
-    );
-  }
+export default class App extends Component {
+
+    componentWillMount() {
+        Orientation.lockToLandscape();
+    }
+
+
+
+    render() {
+        return (
+            <AppRouter/>
+        );
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F5FCFF',
-  },
-});

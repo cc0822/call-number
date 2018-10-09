@@ -1,36 +1,28 @@
 import {StackNavigator} from "react-navigation";
-import {Color} from "../assets/Color";
-import {Home} from "../screen/Home";
-import {Login} from "../screen/Login";
+import {Home} from "../views/Home";
+import {Login} from "../views/Login";
 
 const MainRoutes = StackNavigator(
     {
-        Home: {
-            screen: Home,
-            navigationOptions: {
-                headerTitle: "首页"
-            }
-        },
         Login: {
             screen: Login,
             navigationOptions: {
-                headerTitle: "登录"
+                title: ' ', // 这里不给值
+                header: false, // 不显示导航栏
+                gesturesEnabled: false,
             }
         },
+        Home: {
+            screen: Home,
+            navigationOptions: {
+                title: ' ', // 这里不给值
+                header: false, // 不显示导航栏
+                gesturesEnabled: false
+            }
+        }
     },
     {
-        initialRouteName: 'Home',
-        navigationOptions: {
-            headerTintColor: '#fff',
-            headerStyle: {
-                elevation: 0, //header取消底部阴影效果
-                backgroundColor: Color.mainColor,
-            },
-            headerTitleStyle: {
-                alignSelf: 'center'
-            },
-            gesturesEnabled: true //支持手势返回
-        }
+        initialRouteName: 'Home'
     }
 )
 

@@ -14,7 +14,6 @@ import {
 } from 'react-navigation-redux-helpers';
 import {BackHandler} from "react-native";
 import NavUtils from "../utils/NavUtils";
-import {notAuthScreens} from "../redux/reducers/login";
 
 const addListener = createReduxBoundAddListener("root");
 
